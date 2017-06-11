@@ -1,0 +1,213 @@
+* {
+    box-sizing: border-box;
+}
+body, p{
+    padding: 0;
+    margin: 0;
+    font-family: Helvetica, "microsoft yahei", sans-serif;
+}
+a {
+    text-decoration: none;
+}
+input{
+    outline:none;
+}
+.log-in-wrapper {
+    background: url("../../images/log_in_bg.jpg") no-repeat top center;
+    background-size: cover;
+    min-height: 100vh;
+    padding-top: 15vh;
+    padding-bottom: 30px;
+}
+.main-content {
+    margin: 0 auto;
+    width: 416px;
+    background-color: white;
+    border-radius: 9px;
+    padding: 48px 33px 29px;
+    text-align: center;
+}
+.logo {
+    margin-bottom: 42px;
+    height: 50px;
+}
+.item {
+    display: block;
+    width: 100%;
+    position: relative;
+    margin-bottom: 14px;
+    text-align: left;
+}
+.item .input-box {
+    display: inline-block;
+    width: 100%;
+    border-radius: 4px;
+    border: none;
+    background-color: #f3f4f4;
+    color: #8c8d8d;
+    font-size: 12px;
+    height: 45px;
+    padding-left: 22px;
+    font-family: Helvetica, "microsoft yahei", sans-serif;
+}
+.item .input-box:focus {
+    background-color: white;
+    border: 1px solid #25a597;
+}
+.item.error .input-box {
+    border: 1px solid #f15353;
+    background-color: white;
+}
+.item .icon {
+    display: inline-block;
+    position: absolute;
+    height: 45px;
+    top: 0;
+    right: 0;
+    width: 45px;
+    border-radius: 0 4px 4px 0;
+    background-color: #25a597;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.item.error .icon {
+    background-color: #f15353;
+}
+.item .tooltip {
+    /*position: absolute;*/
+    /*top: 12px;*/
+    /*right: 60px;*/
+    color: #f15353;
+    font-size: 12px;
+    pointer-events: none;
+    position: relative;
+    bottom: -5px;
+}
+/*.item-captcha .tooltip {*/
+    /*right: 150px;*/
+/*}*/
+.item-username .icon{
+    background-image: url("../../images/log_in_icon_user.png");
+}
+.item-password .icon {
+    background-image: url("../../images/log_in_icon_pwd.png");
+}
+.item-captcha .icon {
+    cursor: pointer;
+    background-image: url("../../images/log_in_icon_refresh.png");
+}
+.item-captcha .icon.check {
+    background-image: url("../../images/log_in_icon_check.png");
+}
+.item-captcha .captcha-img {
+    position: absolute;
+    top: 6px;
+    right: 50px;
+}
+.action-line {
+    position: relative;
+    font-size: 12px;
+    color: #565757;
+    text-align: left;
+}
+
+
+
+.green-checkbox-wrapper {
+    font-size: 9px;
+    letter-spacing: -1px;
+    line-height: 15px;
+    margin-right: 10px;
+    float: left;
+    width: 12px;
+    height: 12px;
+}
+.green-checkbox-wrapper input {
+    cursor: pointer;
+    height: inherit;
+    left: 0;
+    margin: 0;
+    opacity: 0;
+    position: absolute;
+    top: 3px;
+    width: inherit;
+    z-index: 1;
+}
+.green-checkbox-wrapper input+b {
+    /*border: 1px solid #5368a2;*/
+    width: 12px;
+    line-height: 10px;
+    border-radius: 2px;
+    box-sizing: border-box;
+    cursor: pointer;
+    height: inherit;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 3px;
+    z-index: 2;
+    background-color: #f3f4f4;
+    box-shadow: 0 0 1px 1px rgba(0,0,0,0.2);
+}
+.green-checkbox-wrapper input:checked+b:after {
+    content: url("../../img/account/log_in_remember.png");
+    position: absolute;
+    top: 0;
+    background-color: #25a597;
+    border-radius: 2px;
+    width: 12px;
+    height: 12px;
+    text-align: center;
+    line-height: 15px;
+}
+.action-line .forgot {
+    position: absolute;
+    right: 0;
+    color: #565757;
+}
+.login-btn {
+    cursor: pointer;
+    display: inline-block;
+    width: 100%;
+    height: 45px;
+    border-radius: 4px;
+    background-color: #25a597;
+    color: white;
+    font-size: 18px;
+    line-height: 44px;
+    border: none;
+    font-family: Helvetica, "microsoft yahei", sans-serif;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+.login-btn, .login-btn:focus, .login-btn:active {
+    outline: none;
+}
+.login-btn:active {
+    -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+}
+.bottom-text {
+    color: #676767;
+    font-size: 12px;
+    text-align: center;
+    line-height: 2;
+}
+.bottom-text a {
+    color: #25a597;
+}
+.close-btn {
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+    margin-left: 300px;
+    top: 7vh;
+    height: 58px;
+    width: 58px;
+    cursor: pointer;
+    background: url("../../img/account/log_in_close.png") no-repeat center center;
+    transition-duration: 0.4s;
+}
+.close-btn:hover {
+    background: url("../../img/account/log_in_close_hover.png") no-repeat center center;
+}

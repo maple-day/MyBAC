@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx.xsd">
+		
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="root"></property>
+		<property name="password" value="896757055"></property>
+		<property name="jdbcUrl" value="jdbc:mysql:///myrbac"></property>
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+<!-- 		<property name="mappingLocations" value="classpath:com/fangda/rbac/domain/User.hbm.xml"></property>
+ -->	<property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:com/fangda/rbac/domain</value>
+			</list>
+		</property>
+ 
+ </bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<!--组件扫描  -->
+	<context:component-scan base-package="com.fangda.rbac"></context:component-scan>				
+	<!--引入注解解析器  -->
+	<context:annotation-config></context:annotation-config>
+	<!-- 事物注解 -->
+	<tx:annotation-driven/>
+	
+	<!-- 权限管理 -->
+	
+	<bean id="MyRBACRealm" class="com.fangda.rbac.shiro.MyRBACRealm"></bean>
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="MyRBACRealm"></property>
+	</bean>
+	
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager"></property>
+		<property name="loginUrl" value="/check.jsp"></property>
+		<property name="successUrl" value="/index.jsp"></property>
+		<property name="unauthorizedUrl" value="/unauthorizedUrl.jsp"></property>
+		<property name="filterChainDefinitions">
+			<!--url拦截  -->
+			<value>
+				/css/** = anon
+				/images/** = anon
+				/js/** = anon
+				/login.jsp* = anon
+				/validatecode.jsp* = anon
+				/page_base_staff.action = perms["staff"]
+				/page_base_region.action = perms["region"]
+				/page_base_subarea.action = perms["adb"]
+				/userAction_login.action = anon
+				/* = authc
+			</value>
+		</property>
+	</bean>
+	<!-- 注解拦截 -->
+	<!-- 开启shiro注解  -->
+	<bean id="defaultAdvisorAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"> 
+		<!-- 强制使用cglib为action创建代理 -->
+		<property name="proxyTargetClass" value="true"></property>
+	</bean>
+	
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"></bean>
+	
+	<!--流程引擎配置  -->
+	
+	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+		<!--注入数据源  -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 注入管理器 -->
+		<property name="transactionManager" ref="transactionManager"></property>
+		<property name="databaseSchemaUpdate" value="true" /><!-- 生产数据表 -->
+	</bean>
+	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+		<property name="processEngineConfiguration" ref="processEngineConfiguration"></property>
+	</bean>
+	<bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService"></bean>
+	<bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService">
+	</bean>
+	<bean id="taskService" factory-bean="processEngine" factory-method="getTaskService">
+	</bean>
+	<bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService">
+	</bean>
+	<bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService">
+	</bean>
+</beans>

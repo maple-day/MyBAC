@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.fangda.rbac.domain.Leave" table="user_leave" catalog="myrbac">
+        <id name="id" type="java.lang.String">
+            <column name="id" length="32" />
+            <generator class="uuid" />
+        </id>
+        <many-to-one lazy="false" name="user" class="com.fangda.rbac.domain.User" fetch="select">
+            <column name="userid" length="32" />
+        </many-to-one>
+        <property name="day" type="java.lang.Integer">
+            <column name="DAY" />
+        </property>
+        <property name="start" type="java.util.Date">
+            <column name="START" length="0" />
+        </property>
+        <property name="end" type="java.util.Date">
+            <column name="END" length="0" />
+        </property>
+        <property name="reason" type="java.lang.String">
+            <column name="reason" length="300" />
+        </property>
+        <property name="mangercheck" type="java.lang.String">
+            <column name="mangercheck" length="1" />
+        </property>
+        <property name="checkprocess" type="java.lang.String">
+            <column name="checkprocess" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

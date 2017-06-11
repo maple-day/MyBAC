@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<constant name="struts.devMode" value="true"></constant>
+	<constant name="struts.objectFactory" value="spring"/>
+	<constant name="struts.custom.i18n.resources" value="message"></constant>
+	<package name="myStruts" abstract="ture" extends="struts-default">
+		<interceptors>
+			<interceptor name="myLoginiInterceptor" class="com.fangda.rbac.web.interceptor.RbacUserInterceptor">
+				<param name="excludeMethods">login</param>
+			</interceptor>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="myLoginiInterceptor"/>
+				<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myStack"></default-interceptor-ref>
+	</package>
+	
+	<package name="rbac" extends="myStruts">
+		<global-results>
+			<result name="login">/check.jsp</result>
+			<result name="validatecode">/unauthorizedUrl.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping result="validatecode" exception="org.apache.shiro.authz.AuthorizationException"></exception-mapping>
+		</global-exception-mappings>
+		<!-- 需要进行权限控制的页面访问 -->
+		<action name="page_*_*" class="pageAction" method="{2}">
+			<result name="login" type="redirect">/check.jsp</result>
+			<result name="success" type="dispatcher">/WEB-INF/page/{1}/{2}.jsp</result>
+		</action>	
+		<!-- 用户管理 -->		
+		<action name="userAction_*" class="userAction" method="{1}">
+			<result name="home" type="redirect">/index.jsp</result>
+			<result name="list">/WEB-INF/page/admin/userlist.jsp</result>
+			<result >/WEB-INF/page/admin/role_search.jsp</result>
+			<result name="edit">/WEB-INF/page/admin/useredit.jsp</result>
+		</action>
+		<!--权限管理  -->
+		<action name="functionAction_*" class="functionAction" method="{1}">
+			<result name="edit">/WEB-INF/page/admin/function_edit.jsp</result>
+			<result name="list">/WEB-INF/page/admin/function.jsp</result>
+		</action>
+		<!--角色管理  -->
+		<action name="roleAction_*" class="roleAction" method="{1}">
+			<result name="list">/WEB-INF/page/admin/role.jsp</result>
+			<result name="edit">/WEB-INF/page/admin/roleedit.jsp</result>
+		</action>
+		<!--系统日志  -->
+		<action name="systemAction_*" class="systemAction" method="{1}">
+			<result name="list">/WEB-INF/page/admin/system.jsp</result>
+		</action>
+		<!--请假  -->
+		<action name="leaveAction_*" class="leaveAction" method="{1}">
+			<result name="list">/WEB-INF/page/leave/leave.jsp</result>
+		</action>
+		
+		<!--流程定义  -->
+		<action name="processDefinitionAction_*" class="processDefinitionAction" method="{1}">
+			<result name="list">/WEB-INF/page/workflow/processdefinition_list.jsp</result>
+			<result name="toList" type="redirectAction">
+				processDefinitionAction_list
+			</result>
+			<result name="error">/WEB-INF/page/workflow/processdefinition_deploy.jsp</result>
+			<result name="showpng" type="stream">
+				<param name="contentType">image/png</param>
+				<param name="inputName">pngStream</param>
+				<!-- 
+					<param name="contentDisposition">attachment;filename="abc.png"</param>
+					<param name="bufferSize">1024</param>
+				 -->
+			</result>
+		</action>
+		
+		<!--流程实例  -->
+		<action name="processInstanceAction_*" class="processInstanceAction" method="{1}">
+				<result name="list" >/WEB-INF/page/workflow/processinstance.jsp</result>	
+				<result name="showPng" >/WEB-INF/page/workflow/image.jsp</result>	
+				<result name="viewImage" type="stream">
+					<param name="contentType">image/png</param>
+					<param name="inputName">pngStream</param>
+					<!-- 
+						<param name="contentDisposition">attachment;filename="abc.png"</param>
+						<param name="bufferSize">1024</param>
+					 -->
+			</result>
+		</action>
+		<!-- 流程任务 -->
+		<action name="taskAction_*" class="taskAction" method="{1}">
+			<result name="grouptasklist">/WEB-INF/page/workflow/grouptask.jsp</result>
+			<result name="togrouptasklist" type="redirectAction">taskAction_findGroupTask</result>
+			<result name="personaltasklist" >/WEB-INF/page/workflow/personaltask.jsp</result>
+			<result name="auditing" type="redirectAction">taskAction_findPersonalTask</result>
+		</action>
+	</package>
+</struts>
